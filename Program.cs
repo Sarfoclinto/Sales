@@ -26,9 +26,12 @@ class Program
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("--------------------------------------------------------------------------");
-            Console.WriteLine("                             SHELL STORE");
-            Console.WriteLine("--------------------------------------------------------------------------");
+            List<string> str = [
+                "--------------------------------------------------------------------------",
+                "                             SHELL STORE",
+                "--------------------------------------------------------------------------"
+                ];
+            Utilities.DisplayHeader(str);
             for(int i = 0; i < 7; i++)
             {
                 Console.WriteLine($"{i + 1}. {options[i]}");

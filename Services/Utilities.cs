@@ -17,5 +17,15 @@
             Console.WriteLine(info);
             Console.ReadKey();
         }
+
+        public static void DisplayHeader(List<string> strs, ConsoleColor color = ConsoleColor.Cyan)
+        {
+            Console.ForegroundColor = color;
+            foreach (var item in strs)
+            {
+                Console.WriteLine(item);
+            }
+            Console.ResetColor();
+        }
     }
 }
