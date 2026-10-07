@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Sales.Models;
+﻿using Sales.Models;
 using Sales.Repository;
 
 namespace Sales.Services
@@ -158,9 +157,16 @@ namespace Sales.Services
         {
             List<Employee> employees = await repo.GetEmployeeAsync();
             if(employees.Count == 0) Utilities.Pause();
+            Console.Clear();
+            List<string> str = [
+                "--------------------------------------------------------------------------",
+                "                             EMPLOYEES LIST",
+                "--------------------------------------------------------------------------"
+                ];
+            Utilities.DisplayHeader(str);
             foreach (var emp in employees)
             {
-                Console.WriteLine($"{emp.EmployeeId}. {emp.FirstName} {emp.LastName} - GHC {emp.Salary:N2} - Mng: {emp.ManagerId}. {emp.ManagerName}");
+                Console.WriteLine($"{emp.EmployeeId}. {emp.FirstName} {emp.LastName}\t\t  GHC {emp.Salary:N2}\t\t  Mng: {emp.ManagerId}. {emp.ManagerName}");              
             }
         }        
         private async Task UpdateService() 
@@ -360,6 +366,58 @@ namespace Sales.Services
             }
 
         }
-        private async Task DeleteService() { }
+        private async Task DeleteService()
+        {
+            Console.Clear();
+            List<string> str = [
+                "--------------------------------------------------------------------------",
+                "                             Delete",
+                "--------------------------------------------------------------------------"
+                ];
+            Utilities.DisplayHeader(str);
+            List<Employee> employees = await repo.GetEmployeeAsync();
+            if (employees.Count == 0)
+            {
+                Console.WriteLine("No Employee found");
+                return;
+            }
+            foreach (Employee emp in employees)
+            {
+                Console.WriteLine($"ID: ({emp.EmployeeId})\tName: {emp.FirstName} {emp.LastName}\t\t({emp.Department})");
+            }
+            while (true)
+            {
+                Console.WriteLine("Enter the ID of employee to delete");
+                Console.Write(">> ");
+                string opt = Console.ReadLine()!;
+                if (opt.Equals("quit", StringComparison.CurrentCultureIgnoreCase)) return;
+                else
+                {
+                    if (int.TryParse(opt, out int optVal))
+                    {
+                        Employee? employee = employees.Find((em) => em.EmployeeId == optVal);
+                        if (employee == null || employee.EmployeeId == 0)
+                        {
+                            Console.WriteLine("Invalid Employee ID or Employee not found");
+                            continue;
+                        }
+                        else
+                        {
+                            int rows = await repo.DeleteEmployeeAsync(optVal);
+                            if(rows == 0)
+                            {
+                                Console.WriteLine("Failed to delete employee. Try again");
+                                continue;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Employee delete successfully");
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

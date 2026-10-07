@@ -225,5 +225,27 @@ namespace Sales.Repository
                 return null;
             }
         }
+        public async Task<int> DeleteEmployeeAsync(int empId)
+        {
+            try
+            {
+                if (empId == 0)
+                {
+                    Console.WriteLine("Invalid Employee ID");
+                    return 0;
+                }
+                using SqlConnection connection = db.CreateConnection();
+                await connection.OpenAsync();
+                const string deleteText = @"DELETE FROM EMPLOYEES WHERE EMPLOYEEID = @ID";
+                using SqlCommand command = new(deleteText, connection);
+                command.Parameters.AddWithValue("@ID", empId);
+                return await command.ExecuteNonQueryAsync();                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred whiles deleting: {ex.Message}");
+                return 0;
+            }
+        }
     }
 }
