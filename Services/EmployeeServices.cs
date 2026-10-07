@@ -1,4 +1,5 @@
-﻿using Sales.Models;
+﻿using Microsoft.Data.SqlClient;
+using Sales.Models;
 using Sales.Repository;
 
 namespace Sales.Services
@@ -14,6 +15,7 @@ namespace Sales.Services
                 Console.WriteLine("                             EMPLOYEES");
                 Console.WriteLine("--------------------------------------------------------------------------");
                 int len = Utilities.DisplayBasicOptions();
+                Console.Write(">> ");
                 if (int.TryParse(Console.ReadLine(), out int opt))
                 {
                     if (opt >= 0 && opt <= len)
@@ -25,7 +27,7 @@ namespace Sales.Services
                                 Utilities.Pause();
                                 break;
                             case 2:
-                                Console.WriteLine("View");
+                                await ViewAllService();
                                 Utilities.Pause();
                                 break;
                             case 3:
@@ -80,7 +82,7 @@ namespace Sales.Services
             while (true)
             {
                 Console.Write("Enter salary: ");
-                if (double.TryParse(Console.ReadLine(), out double salary))
+                if (decimal.TryParse(Console.ReadLine(), out decimal salary))
                 {
                     if(salary <= 0)
                     {
@@ -138,6 +140,15 @@ namespace Sales.Services
                 ? "Employee created successfully."
                 : "Employee could not be created."
             );
+        }
+        private async Task ViewAllService()
+        {
+            List<Employee> employees = await repo.GetAllEmployeeAsync();
+            if(employees.Count == 0) Utilities.Pause();
+            foreach (var emp in employees)
+            {
+                Console.WriteLine($"{emp.EmployeeId}. {emp.FirstName} {emp.LastName} - GHC {emp.Salary:N2} - Mng: {emp.ManagerId}. {emp.ManagerName}");
+            }
         }
     }
 }

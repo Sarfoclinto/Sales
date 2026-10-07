@@ -5,7 +5,7 @@ using Sales.Services;
 
 class Program
 {
-    public static async void Main()
+    public static async Task Main()
     {
         IConfiguration configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
@@ -34,7 +34,8 @@ class Program
                 Console.WriteLine($"{i + 1}. {options[i]}");
             }
             Console.WriteLine("0. Quit");
-            if(int.TryParse(Console.ReadLine(),out int opt))
+            Console.Write(">> ");
+            if (int.TryParse(Console.ReadLine(),out int opt))
             {
                 if(opt >= 0 && opt <= 7)
                 {
